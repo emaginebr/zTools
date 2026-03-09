@@ -14,6 +14,8 @@ services:
       - ChatGPT__ApiUrl=${CHATGPT_APIURL}
       - ChatGPT__Model=${CHATGPT_MODEL}
       - ChatGPT__ImageApiUrl=${CHATGPT_IMAGEAPIURL}
+      - InVideo__ApiUrl=${INVIDEO__APIURL}
+      - InVideo__ApiKey=${INVIDEO__APIKEY}
       - MailerSend__MailSender=${MAILERSEND__MAILSENDER}
       - MailerSend__ApiURL=${MAILERSEND__APIURL}
       - MailerSend__ApiToken=${MAILERSEND__APITOKEN}
