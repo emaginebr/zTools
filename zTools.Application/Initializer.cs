@@ -22,6 +22,7 @@ namespace zTools.Application
             
             services.AddHttpClient<IMailerSendService, MailerSendService>();
             services.AddHttpClient<IChatGPTService, ChatGPTService>();
+            services.AddHttpClient<IInVideoService, InVideoService>();
         }
     }
 }

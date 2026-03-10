@@ -29,6 +29,7 @@ namespace zTools.API
             services.Configure<MailerSendSetting>(Configuration.GetSection("MailerSend"));
             services.Configure<S3Setting>(Configuration.GetSection("S3"));
             services.Configure<ChatGPTSetting>(Configuration.GetSection("ChatGPT"));
+            services.Configure<InVideoSetting>(Configuration.GetSection("InVideo"));
 
             Initializer.Configure(services, Configuration.GetConnectionString("NAuthContext"));
 
