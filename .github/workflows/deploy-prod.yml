@@ -56,13 +56,23 @@ jobs:
               cd "$DEPLOY_DIR"
             fi
 
-            # Inject environment variables (only secrets, fixed values are in appsettings.Production.json)
-            cat > .env << 'ENVEOF'
-            CHATGPT_APIKEY=${{ secrets.CHATGPT_APIKEY }}
+            # Inject environment variables
+            cat > .env << ENVEOF
+            # MailerSend
             MAILERSEND_MAILSENDER=${{ secrets.MAILERSEND_MAILSENDER }}
+            MAILERSEND_APIURL=https://api.mailersend.com/v1/email
             MAILERSEND_APITOKEN=${{ secrets.MAILERSEND_APITOKEN }}
+
+            # ChatGPT
+            CHATGPT_APIKEY=${{ secrets.CHATGPT_APIKEY }}
+            CHATGPT_APIURL=https://api.openai.com/v1/chat/completions
+            CHATGPT_MODEL=gpt-5.2
+            CHATGPT_IMAGEAPIURL=https://api.openai.com/v1/images/generations
+
+            # S3
             S3_ACCESSKEY=${{ secrets.S3_ACCESSKEY }}
             S3_SECRETKEY=${{ secrets.S3_SECRETKEY }}
+            S3_ENDPOINT=https://emagine.nyc3.digitaloceanspaces.com
             ENVEOF
 
             # Remove leading whitespace from .env lines
