@@ -45,10 +45,10 @@ namespace zTools.Tests.ACL
             var fileName = "test-file.jpg";
             var expectedUrl = "https://storage.example.com/test-bucket/test-file.jpg";
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/getFileUrl/{fileName}";
-            
+
             _mockHttpHandler
                 .When(apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedUrl));
+                .Respond("text/plain", expectedUrl);
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -68,10 +68,10 @@ namespace zTools.Tests.ACL
         {
             // Arrange
             var apiUrl = $"{_settings.ApiUrl}/File/{bucket}/getFileUrl/{file}";
-            
+
             _mockHttpHandler
                 .When(apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedUrl));
+                .Respond("text/plain", expectedUrl);
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -89,10 +89,10 @@ namespace zTools.Tests.ACL
             var bucketName = "test-bucket";
             var fileName = string.Empty;
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/getFileUrl/{fileName}";
-            
+
             _mockHttpHandler
                 .When(apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(string.Empty));
+                .Respond("text/plain", string.Empty);
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -104,16 +104,16 @@ namespace zTools.Tests.ACL
         }
 
         [Fact]
-        public async Task GetFileUrlAsync_WhenApiReturnsNull_ReturnsEmptyString()
+        public async Task GetFileUrlAsync_WhenApiReturnsNull_ReturnsNullString()
         {
             // Arrange
             var bucketName = "test-bucket";
             var fileName = "test.jpg";
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/getFileUrl/{fileName}";
-            
+
             _mockHttpHandler
                 .When(apiUrl)
-                .Respond("application/json", "null");
+                .Respond("text/plain", "null");
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -121,7 +121,7 @@ namespace zTools.Tests.ACL
             var result = await client.GetFileUrlAsync(bucketName, fileName);
 
             // Assert
-            Assert.Equal(string.Empty, result);
+            Assert.Equal("null", result);
         }
 
         [Fact]
@@ -132,10 +132,10 @@ namespace zTools.Tests.ACL
             var fileName = "folder/subfolder/file with spaces.pdf";
             var expectedUrl = "https://s3.com/test-bucket/folder/subfolder/file with spaces.pdf";
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/getFileUrl/{fileName}";
-            
+
             _mockHttpHandler
                 .When(apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedUrl));
+                .Respond("text/plain", expectedUrl);
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -157,10 +157,10 @@ namespace zTools.Tests.ACL
             var bucketName = "test-bucket";
             var fileName = "test.jpg";
             var expectedUrl = $"{_settings.ApiUrl}/File/{bucketName}/getFileUrl/{fileName}";
-            
+
             _mockHttpHandler
                 .Expect(HttpMethod.Get, expectedUrl)
-                .Respond("application/json", JsonConvert.SerializeObject("https://url.com"));
+                .Respond("text/plain", "https://url.com");
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -182,10 +182,10 @@ namespace zTools.Tests.ACL
             var bucketName = "bucket";
             var fileName = "file.jpg";
             var apiUrl = $"{customSettings.ApiUrl}/File/{bucketName}/getFileUrl/{fileName}";
-            
+
             _mockHttpHandler
                 .When(apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject("https://url.com"));
+                .Respond("text/plain", "https://url.com");
 
             var client = new FileClient(_httpClient, mockCustomSettings.Object, _mockLogger.Object);
 
@@ -207,7 +207,7 @@ namespace zTools.Tests.ACL
             var bucketName = "test-bucket";
             var fileName = "nonexistent.jpg";
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/getFileUrl/{fileName}";
-            
+
             _mockHttpHandler
                 .When(apiUrl)
                 .Respond(HttpStatusCode.NotFound);
@@ -215,7 +215,7 @@ namespace zTools.Tests.ACL
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => 
+            await Assert.ThrowsAsync<HttpRequestException>(() =>
                 client.GetFileUrlAsync(bucketName, fileName));
         }
 
@@ -226,7 +226,7 @@ namespace zTools.Tests.ACL
             var bucketName = "test-bucket";
             var fileName = "test.jpg";
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/getFileUrl/{fileName}";
-            
+
             _mockHttpHandler
                 .When(apiUrl)
                 .Respond(HttpStatusCode.InternalServerError);
@@ -234,7 +234,7 @@ namespace zTools.Tests.ACL
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => 
+            await Assert.ThrowsAsync<HttpRequestException>(() =>
                 client.GetFileUrlAsync(bucketName, fileName));
         }
 
@@ -245,7 +245,7 @@ namespace zTools.Tests.ACL
             var bucketName = "test-bucket";
             var fileName = "test.jpg";
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/getFileUrl/{fileName}";
-            
+
             _mockHttpHandler
                 .When(apiUrl)
                 .Respond(HttpStatusCode.Unauthorized);
@@ -253,7 +253,7 @@ namespace zTools.Tests.ACL
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => 
+            await Assert.ThrowsAsync<HttpRequestException>(() =>
                 client.GetFileUrlAsync(bucketName, fileName));
         }
 
@@ -270,10 +270,10 @@ namespace zTools.Tests.ACL
             var expectedFileName = "uploaded-file-123.jpg";
             var mockFile = CreateMockFormFile(fileName, "test content");
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/uploadFile";
-            
+
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedFileName));
+                .Respond("text/plain", expectedFileName);
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -295,10 +295,10 @@ namespace zTools.Tests.ACL
             var bucketName = "test-bucket";
             var mockFile = CreateMockFormFile(originalName, "content");
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/uploadFile";
-            
+
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(uploadedName));
+                .Respond("text/plain", uploadedName);
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -319,10 +319,10 @@ namespace zTools.Tests.ACL
             var mockFile = CreateMockFormFile(fileName, largeContent);
             var expectedFileName = "uploaded-large.bin";
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/uploadFile";
-            
+
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedFileName));
+                .Respond("text/plain", expectedFileName);
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -334,16 +334,16 @@ namespace zTools.Tests.ACL
         }
 
         [Fact]
-        public async Task UploadFileAsync_WhenApiReturnsNull_ReturnsEmptyString()
+        public async Task UploadFileAsync_WhenApiReturnsNull_ReturnsNullString()
         {
             // Arrange
             var bucketName = "test-bucket";
             var mockFile = CreateMockFormFile("test.jpg", "content");
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/uploadFile";
-            
+
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", "null");
+                .Respond("text/plain", "null");
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -351,7 +351,7 @@ namespace zTools.Tests.ACL
             var result = await client.UploadFileAsync(bucketName, mockFile.Object);
 
             // Assert
-            Assert.Equal(string.Empty, result);
+            Assert.Equal("null", result);
         }
 
         #endregion
@@ -365,10 +365,10 @@ namespace zTools.Tests.ACL
             var bucketName = "test-bucket";
             var mockFile = CreateMockFormFile("test.jpg", "content");
             var expectedUrl = $"{_settings.ApiUrl}/File/{bucketName}/uploadFile";
-            
+
             _mockHttpHandler
                 .Expect(HttpMethod.Post, expectedUrl)
-                .Respond("application/json", JsonConvert.SerializeObject("uploaded.jpg"));
+                .Respond("text/plain", "uploaded.jpg");
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -387,15 +387,15 @@ namespace zTools.Tests.ACL
             var fileName = "test.jpg";
             var mockFile = CreateMockFormFile(fileName, "test content");
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/uploadFile";
-            
+
             _mockHttpHandler
                 .Expect(HttpMethod.Post, apiUrl)
-                .With(request => 
+                .With(request =>
                 {
                     Assert.True(request.Content is MultipartFormDataContent);
                     return true;
                 })
-                .Respond("application/json", JsonConvert.SerializeObject("uploaded.jpg"));
+                .Respond("text/plain", "uploaded.jpg");
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -413,10 +413,10 @@ namespace zTools.Tests.ACL
             var bucketName = "test-bucket";
             var mockFile = CreateMockFormFile("test.jpg", "content", "image/jpeg");
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/uploadFile";
-            
+
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject("uploaded.jpg"));
+                .Respond("text/plain", "uploaded.jpg");
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -438,7 +438,7 @@ namespace zTools.Tests.ACL
             var bucketName = "test-bucket";
             var mockFile = CreateMockFormFile("test.jpg", "content");
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/uploadFile";
-            
+
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
                 .Respond(HttpStatusCode.BadRequest);
@@ -446,7 +446,7 @@ namespace zTools.Tests.ACL
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => 
+            await Assert.ThrowsAsync<HttpRequestException>(() =>
                 client.UploadFileAsync(bucketName, mockFile.Object));
         }
 
@@ -457,7 +457,7 @@ namespace zTools.Tests.ACL
             var bucketName = "test-bucket";
             var mockFile = CreateMockFormFile("test.jpg", "content");
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/uploadFile";
-            
+
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
                 .Respond(HttpStatusCode.InternalServerError);
@@ -465,7 +465,7 @@ namespace zTools.Tests.ACL
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => 
+            await Assert.ThrowsAsync<HttpRequestException>(() =>
                 client.UploadFileAsync(bucketName, mockFile.Object));
         }
 
@@ -476,7 +476,7 @@ namespace zTools.Tests.ACL
             var bucketName = "test-bucket";
             var mockFile = CreateMockFormFile("huge.bin", new string('A', 1000));
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/uploadFile";
-            
+
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
                 .Respond(HttpStatusCode.RequestEntityTooLarge);
@@ -484,7 +484,7 @@ namespace zTools.Tests.ACL
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => 
+            await Assert.ThrowsAsync<HttpRequestException>(() =>
                 client.UploadFileAsync(bucketName, mockFile.Object));
         }
 
@@ -495,7 +495,7 @@ namespace zTools.Tests.ACL
             var bucketName = "test-bucket";
             var mockFile = CreateMockFormFile("test.jpg", "content");
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/uploadFile";
-            
+
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
                 .Respond(HttpStatusCode.Unauthorized);
@@ -503,7 +503,7 @@ namespace zTools.Tests.ACL
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => 
+            await Assert.ThrowsAsync<HttpRequestException>(() =>
                 client.UploadFileAsync(bucketName, mockFile.Object));
         }
 
@@ -521,10 +521,10 @@ namespace zTools.Tests.ACL
             // Arrange
             var expectedUrl = $"https://s3.com/{bucket}/{file}";
             var apiUrl = $"{_settings.ApiUrl}/File/{bucket}/getFileUrl/{file}";
-            
+
             _mockHttpHandler
                 .When(apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedUrl));
+                .Respond("text/plain", expectedUrl);
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -544,10 +544,10 @@ namespace zTools.Tests.ACL
             var mockFile = CreateMockFormFile(fileName, "content");
             var expectedFileName = "uploaded-file.pdf";
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/uploadFile";
-            
+
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedFileName));
+                .Respond("text/plain", expectedFileName);
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -566,10 +566,10 @@ namespace zTools.Tests.ACL
             var fileName = "2024/01/15/document.pdf";
             var expectedUrl = $"https://s3.com/{bucketName}/{fileName}";
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/getFileUrl/{fileName}";
-            
+
             _mockHttpHandler
                 .When(apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedUrl));
+                .Respond("text/plain", expectedUrl);
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -593,14 +593,14 @@ namespace zTools.Tests.ACL
             var file2 = "file2.png";
             var url1 = "https://s3.com/file1.jpg";
             var url2 = "https://s3.com/file2.png";
-            
+
             _mockHttpHandler
                 .When($"{_settings.ApiUrl}/File/{bucketName}/getFileUrl/{file1}")
-                .Respond("application/json", JsonConvert.SerializeObject(url1));
-            
+                .Respond("text/plain", url1);
+
             _mockHttpHandler
                 .When($"{_settings.ApiUrl}/File/{bucketName}/getFileUrl/{file2}")
-                .Respond("application/json", JsonConvert.SerializeObject(url2));
+                .Respond("text/plain", url2);
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -622,11 +622,11 @@ namespace zTools.Tests.ACL
             var mockFile2 = CreateMockFormFile("file2.png", "content2");
             var uploadedName1 = "uploaded1.jpg";
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/uploadFile";
-            
+
             // First call returns first file name
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(uploadedName1));
+                .Respond("text/plain", uploadedName1);
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -656,10 +656,10 @@ namespace zTools.Tests.ACL
             var mockFile = CreateMockFormFile("test-file", "content", contentType);
             var expectedFileName = "uploaded-file";
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/uploadFile";
-            
+
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedFileName));
+                .Respond("text/plain", expectedFileName);
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -678,10 +678,10 @@ namespace zTools.Tests.ACL
             var fileName = "invoices/2024/january/invoice-001.pdf";
             var expectedUrl = "https://s3.amazonaws.com/company-documents/invoices/2024/january/invoice-001.pdf";
             var apiUrl = $"{_settings.ApiUrl}/File/{bucketName}/getFileUrl/{fileName}";
-            
+
             _mockHttpHandler
                 .When(apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedUrl));
+                .Respond("text/plain", expectedUrl);
 
             var client = new FileClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -713,23 +713,23 @@ namespace zTools.Tests.ACL
         #region Helper Methods
 
         private Mock<IFormFile> CreateMockFormFile(
-            string fileName, 
-            string content, 
+            string fileName,
+            string content,
             string contentType = "application/octet-stream")
         {
             var bytes = Encoding.UTF8.GetBytes(content);
             var stream = new MemoryStream(bytes);
-            
+
             var mockFile = new Mock<IFormFile>();
             mockFile.Setup(f => f.FileName).Returns(fileName);
             mockFile.Setup(f => f.Length).Returns(bytes.Length);
             mockFile.Setup(f => f.ContentType).Returns(contentType);
-            mockFile.Setup(f => f.OpenReadStream()).Returns(() => 
+            mockFile.Setup(f => f.OpenReadStream()).Returns(() =>
             {
                 stream.Position = 0;
                 return stream;
             });
-            
+
             return mockFile;
         }
 

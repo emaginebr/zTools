@@ -49,7 +49,7 @@ namespace zTools.Tests.ACL
 
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedResponse));
+                .Respond("text/plain", expectedResponse);
 
             var client = new ChatGPTClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -71,7 +71,7 @@ namespace zTools.Tests.ACL
 
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedResponse));
+                .Respond("text/plain", expectedResponse);
 
             var client = new ChatGPTClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -92,7 +92,7 @@ namespace zTools.Tests.ACL
 
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedResponse));
+                .Respond("text/plain", expectedResponse);
 
             var client = new ChatGPTClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -116,7 +116,7 @@ namespace zTools.Tests.ACL
 
             _mockHttpHandler
                 .Expect(HttpMethod.Post, expectedUrl)
-                .Respond("application/json", JsonConvert.SerializeObject("Response"));
+                .Respond("text/plain", "Response");
 
             var client = new ChatGPTClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -142,7 +142,7 @@ namespace zTools.Tests.ACL
                     var messageRequest = JsonConvert.DeserializeObject<ChatGPTMessageRequest>(content);
                     return messageRequest.Message == message;
                 })
-                .Respond("application/json", JsonConvert.SerializeObject("Response"));
+                .Respond("text/plain", "Response");
 
             var client = new ChatGPTClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -212,7 +212,7 @@ namespace zTools.Tests.ACL
 
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedResponse));
+                .Respond("text/plain", expectedResponse);
 
             var client = new ChatGPTClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -236,7 +236,7 @@ namespace zTools.Tests.ACL
 
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedResponse));
+                .Respond("text/plain", expectedResponse);
 
             var client = new ChatGPTClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -261,7 +261,7 @@ namespace zTools.Tests.ACL
 
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedResponse));
+                .Respond("text/plain", expectedResponse);
 
             var client = new ChatGPTClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -288,7 +288,7 @@ namespace zTools.Tests.ACL
 
             _mockHttpHandler
                 .Expect(HttpMethod.Post, expectedUrl)
-                .Respond("application/json", JsonConvert.SerializeObject("Response"));
+                .Respond("text/plain", "Response");
 
             var client = new ChatGPTClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -517,7 +517,7 @@ namespace zTools.Tests.ACL
 
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedResponse));
+                .Respond("text/plain", expectedResponse);
 
             var client = new ChatGPTClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
@@ -538,7 +538,7 @@ namespace zTools.Tests.ACL
 
             _mockHttpHandler
                 .When(HttpMethod.Post, apiUrl)
-                .Respond("application/json", JsonConvert.SerializeObject(expectedResponse));
+                .Respond("text/plain", expectedResponse);
 
             var client = new ChatGPTClient(_httpClient, _mockSettings.Object, _mockLogger.Object);
 
