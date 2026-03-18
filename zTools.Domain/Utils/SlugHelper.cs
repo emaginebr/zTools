@@ -22,14 +22,17 @@ namespace zTools.Domain.Utils
 
             var resultado = semAcentos.ToString().Normalize(NormalizationForm.FormC);
 
-            // 2. Remove caracteres especiais
+            // 2. Substitui barras por hÃ­fens (ex: CI/CD -> CI-CD)
+            resultado = resultado.Replace("/", "-");
+
+            // 3. Remove caracteres especiais
             resultado = Regex.Replace(resultado, @"[^a-zA-Z0-9\s-]", "");
 
-            // 3. Substitui espaços e múltiplos hífens por um único hífen
-            resultado = Regex.Replace(resultado, @"\s+", "-"); // espaços por hífen
-            resultado = Regex.Replace(resultado, @"-+", "-");  // múltiplos hífens por um
+            // 4. Substitui espaï¿½os e mï¿½ltiplos hï¿½fens por um ï¿½nico hï¿½fen
+            resultado = Regex.Replace(resultado, @"\s+", "-"); // espaï¿½os por hï¿½fen
+            resultado = Regex.Replace(resultado, @"-+", "-");  // mï¿½ltiplos hï¿½fens por um
 
-            // 4. Converte para minúsculas
+            // 5. Converte para minï¿½sculas
             return resultado.ToLowerInvariant().Trim('-');
         }
     }
